@@ -71,7 +71,11 @@
             </tbody>
         </table>
         </div>
-
+    <script>
+        $('#subjectForm').submit(function(e){
+            e.preventDefault();
+        })
+    </script>
     <script src="{{ url('Assets/js/popper.js') }}"></script>
     <script src="{{ url('Assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ url('Assets/js/main.js') }}"></script>
