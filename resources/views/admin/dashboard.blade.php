@@ -67,6 +67,33 @@
                 </div>
             </div>
         </div>
+        {{-- delete subject modal --}}
+        <div class="modal fade" id="deleteSubjectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            @csrf
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Delete Subject</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form id="deleteSubject">
+                    @csrf
+                    <div class="modal-body">
+                        <P>
+                            Do you really want to delete this subject?
+                        </P>
+                        <input type="hidden" id="delete_subject_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
         {{-- showing subjects --}}
         @if (count($subjects) == 0)
         <h5 class="mt-4">
@@ -78,6 +105,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Subject</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,6 +117,12 @@
                     </td>
                     <td>
                         {{ $subject->subj_name }}
+                    </td>
+                    <td>
+                        <button class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#deleteSubjectModal" data-id="{{ $subject->subj_id }}">Delete</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary">Edit</button>
                     </td>
                 </tr>
                 @endforeach
@@ -118,10 +153,35 @@
                 }
             }
             });
-
-
         })
       })
+    //   Delete subject work
+    $('.deleteBtn').click(function(){
+        var subject_id = $(this).attr('data-id');
+        // console.log(subject_id);
+        // setting value of hidden input
+        $('#delete_subject_id').val(subject_id);
+
+        // when delete modal's form is submitted
+        $('#deleteSubject').submit(function(e){
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('deleteSubject') }}",
+                type: "POST",
+                data: formData,
+                success: function(data){
+                    if(data.success == true){
+                        // alert('yes')
+                        location.reload();
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        })
+    })
     </script>
     <script src="{{ url('Assets/js/popper.js') }}"></script>
     <script src="{{ url('Assets/js/bootstrap.min.js') }}"></script>
