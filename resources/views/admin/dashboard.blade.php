@@ -24,7 +24,6 @@
 
     </head>
   <body>
-
 		<div class="wrapper d-flex align-items-stretch">
 			<nav id="sidebar">
 
@@ -68,13 +67,61 @@
                 </div>
             </div>
         </div>
+        {{-- showing subjects --}}
+        @if (count($subjects) == 0)
+        <h5 class="mt-4">
+            Subjects not found
+        </h5>
+        @endif
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($subjects as $subject)
+                <tr>
+                    <td>
+                        {{ $subject->subj_id }}
+                    </td>
+                    <td>
+                        {{ $subject->subj_name }}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
             </tbody>
         </table>
         </div>
     <script>
-        $('#subjectForm').submit(function(e){
+         $(document).ready(function(){
+          $("#subjectForm").submit(function(e){
             e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+            type: 'POST',
+            url: "{{ route('addSubject') }}",
+            data: formData,
+            // dataType: 'json',
+            success: function(data){
+                console.log(data);
+                if(data.success == true){
+                    location.reload();
+                    // hide modal
+                    // $('#my-modal').modal('hide');
+                }
+                else{
+                    alert(data=>msg);
+                }
+            }
+            });
+
+
         })
+      })
     </script>
     <script src="{{ url('Assets/js/popper.js') }}"></script>
     <script src="{{ url('Assets/js/bootstrap.min.js') }}"></script>

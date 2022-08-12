@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::get('/', function () {
 });
 Route::group(['middleware' => ['web', 'checkAdmin']], function(){
     Route::get('/admin/dashboard',[AuthController::class, 'loadAdminDashboard']);
+    Route::post('/add-subject',[AdminController::class, 'addSubjects'])->name('addSubject');
 });
 Route::group(['middleware' => ['web', 'checkUser']],function(){
     Route::get('/dashboard',[AuthController::class, 'loadDashboard']);
