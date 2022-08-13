@@ -165,11 +165,13 @@
         // when delete modal's form is submitted
         $('#deleteSubject').submit(function(e){
             e.preventDefault();
-            var formData = $(this).serialize();
+            var formData = $('#delete_subject_id').val();
+            // console.log(formData);
+            // return false;
             $.ajax({
                 url: "{{ route('deleteSubject') }}",
-                type: "POST",
-                data: formData,
+                type: "get",
+                data: {subj_id:formData},
                 success: function(data){
                     if(data.success == true){
                         // alert('yes')

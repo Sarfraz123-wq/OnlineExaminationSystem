@@ -27,7 +27,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['web', 'checkAdmin']], function(){
     Route::get('/admin/dashboard',[AuthController::class, 'loadAdminDashboard']);
     Route::post('/add-subject',[AdminController::class, 'addSubjects'])->name('addSubject');
-    Route::post('/delete-subject',[AdminController::class, 'deleteSubject'])->name('deleteSubject');
+    Route::get('/delete-subject',[AdminController::class, 'deleteSubject'])->name('deleteSubject');
 });
 // Route::group(['middleware' => ['web', 'checkUser']],function(){
     Route::get('/dashboard',[AuthController::class, 'loadDashboard']);
