@@ -39,7 +39,7 @@
             <a href="#"><span class="fa fa-home mr-3"></span> Subjects</a>
         </li>
         <li>
-            <a href="#"><span class="fa fa-user mr-3"></span> Exams</a>
+            <a href="/exams"><span class="fa fa-user mr-3"></span> Exams</a>
         </li>
           <li>
               <a href="/logout"><span class="fa fa-user mr-3"></span> Logout</a>
@@ -59,8 +59,8 @@
                     <form id="subjectForm" class="col-9 mx-auto">
                         @csrf
                         <div class="form-group">
-                          <label for="exampleInputEmail1">Add Subject</label>
-                          <input type="text" class="form-control" name="subject" id="exampleInputEmail1" aria-describedby="emailHelp" style="border: 1px solid;">
+                          <label for="addSubjectInput">Add Subject</label>
+                          <input type="text" class="form-control" name="subject" id="addSubjectInput" aria-describedby="emailHelp" style="border: 1px solid;">
                         </div>
                         <button type="submit" class="btn btn-primary mb-2">Submit</button>
                       </form>
@@ -73,7 +73,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Delete Subject</h5>
+                  <h5 class="modal-title" >Delete Subject</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -89,6 +89,31 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          {{-- edit subject modal --}}
+        <div class="modal fade" id="editSubjectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            @csrf
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" >Edit Subject</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form id="editSubject">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="text" id="edit_subject">
+                        <input type="hidden" id="edit_subject_id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Edit</button>
                     </div>
                 </form>
               </div>
@@ -113,16 +138,16 @@
                 @foreach ($subjects as $subject)
                 <tr>
                     <td>
-                        {{ $subject->subj_id }}
+                        {{ $subject->subject_id }}
                     </td>
                     <td>
-                        {{ $subject->subj_name }}
+                        {{ $subject->subject_name }}
                     </td>
                     <td>
-                        <button class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#deleteSubjectModal" data-id="{{ $subject->subj_id }}">Delete</button>
+                        <button class="btn btn-danger deleteBtn" data-toggle="modal" data-target="#deleteSubjectModal" data-id="{{ $subject->subject_id }}">Delete</button>
                     </td>
                     <td>
-                        <button class="btn btn-primary">Edit</button>
+                        <button class="btn btn-primary  editBtn" data-toggle="modal" data-target="#editSubjectModal" data-id="{{ $subject->subject_id }}" data-subject={{ $subject->subject_name }}>Edit</button>
                     </td>
                 </tr>
                 @endforeach
@@ -158,20 +183,47 @@
     //   Delete subject work
     $('.deleteBtn').click(function(){
         var subject_id = $(this).attr('data-id');
-        // console.log(subject_id);
-        // setting value of hidden input
         $('#delete_subject_id').val(subject_id);
-
         // when delete modal's form is submitted
         $('#deleteSubject').submit(function(e){
             e.preventDefault();
             var formData = $('#delete_subject_id').val();
-            // console.log(formData);
-            // return false;
             $.ajax({
                 url: "{{ route('deleteSubject') }}",
                 type: "get",
-                data: {subj_id:formData},
+                data: {subject_id:formData},
+                success: function(data){
+                    if(data.success == true){
+                        // alert('yes')
+                        location.reload();
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        })
+    })
+    //   edit subject work
+    $('.editBtn').click(function(){
+        var subject_id = $(this).attr('data-id');
+        var subject = $(this).attr('data-subject');
+        // console.log(subject_id);
+        // setting value of hidden input
+        $('#edit_subject').val(subject);
+        $('#edit_subject_id').val(subject_id);
+
+        // when delete modal's form is submitted
+        $('#editSubject').submit(function(e){
+            e.preventDefault();
+            var subjID = $('#edit_subject_id').val();
+            var subjName = $('#edit_subject').val();
+            // console.log(subjID)
+            // return false;
+            $.ajax({
+                url: "{{ route('editSubject') }}",
+                type: "get",
+                data: {subject_id:subjID,subject_name:subjName},
                 success: function(data){
                     if(data.success == true){
                         // alert('yes')

@@ -9,5 +9,5 @@ class Subject extends Model
 {
     use HasFactory;
     protected $table = 'subjects';
-    protected $primaryKey = 'subj_id';
+    protected $primaryKey = 'subject_id';
 }

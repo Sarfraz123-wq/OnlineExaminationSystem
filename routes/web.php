@@ -28,6 +28,10 @@ Route::group(['middleware' => ['web', 'checkAdmin']], function(){
     Route::get('/admin/dashboard',[AuthController::class, 'loadAdminDashboard']);
     Route::post('/add-subject',[AdminController::class, 'addSubjects'])->name('addSubject');
     Route::get('/delete-subject',[AdminController::class, 'deleteSubject'])->name('deleteSubject');
+    Route::get('/edit-subject',[AdminController::class, 'editSubject'])->name('editSubject');
+    Route::get('/exams',[AdminController::class, 'examDashboard'])->name('examDashboard');
+    Route::post('/add-exam',[AdminController::class, 'addExams'])->name('addExam');
+    Route::get('/delete-exam',[AdminController::class, 'deleteExam'])->name('deleteExam');
 });
 // Route::group(['middleware' => ['web', 'checkUser']],function(){
     Route::get('/dashboard',[AuthController::class, 'loadDashboard']);
