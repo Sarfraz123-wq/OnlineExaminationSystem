@@ -32,6 +32,7 @@ Route::group(['middleware' => ['web', 'checkAdmin']], function(){
     Route::get('/exams',[AdminController::class, 'examDashboard'])->name('examDashboard');
     Route::post('/add-exam',[AdminController::class, 'addExams'])->name('addExam');
     Route::get('/delete-exam',[AdminController::class, 'deleteExam'])->name('deleteExam');
+    Route::get('/edit-exam',[AdminController::class, 'editExam'])->name('editExam');
 });
 // Route::group(['middleware' => ['web', 'checkUser']],function(){
     Route::get('/dashboard',[AuthController::class, 'loadDashboard']);

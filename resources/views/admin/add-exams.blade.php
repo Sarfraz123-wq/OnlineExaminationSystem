@@ -92,6 +92,22 @@
                 </div>
             </div>
         </div>
+        {{-- Edit exam modal --}}
+        <div id="editExamModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="examEditForm" class="col-9 mx-auto">
+                        @csrf
+                        <div class="form-group">
+                          <label for="examInput">Edit Exam</label>
+                          <input type="text" id="editExamInput">
+                          <input type="hidden" id="deleteHiddenInput">
+                        </div>
+                        <button type="submit" class="btn btn-primary mb-2" id="deleteExamModalBtn">Edit</button>
+                      </form>
+                </div>
+            </div>
+        </div>
         @if (count($exams) < 1)
             <div class="mb-2">
                 <h5> No exams schedule yet, Whoooo.. Enjoy! </h5>
@@ -106,6 +122,7 @@
                     <th> Date </th>
                     <th> Time </th>
                     <th> Delete </th>
+                    <th> Edit </th>
                 </tr>
             </thead>
             <tbody>
@@ -118,6 +135,9 @@
                     <td> {{ $exam->time }} </td>
                     <td>
                         <button class="btn btn-danger examDeleteBtn" data-id="{{ $exam->id }}" type="button" data-toggle="modal" data-target="#deleteExamModal">Delete</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary examEditBtn" data-id="{{ $exam->id }}" data-exam="{{ $exam->exam_name }}" type="button" data-toggle="modal" data-target="#editExamModal">Edit</button>
                     </td>
                 </tr>
                 @endforeach
@@ -178,7 +198,28 @@
                 });
                 })
             })
-
+            $('.examEditBtn').click(function(){
+                var examId = $(this).attr('data-id');
+                var examName = $(this).attr('data-exam');
+                $('#editExamInput').val(examName);
+                $('#examEditForm').submit(function(e){
+                    e.preventDefault();
+                    var editExamInput = $('#editExamInput').val();
+                    console.log("editExamInput",editExamInput);
+                    $.ajax({
+                        url: "{{ route('editExam') }}",
+                        type: "get",
+                        data: {id:examId,exam_name:editExamInput},
+                        success: function(data){
+                            console.log(data.editedExam)
+                            if(data.status == true){
+                                console.log("hogya");
+                                location.reload();
+                            }
+                        }
+                    });
+            });
+            });
         </script>
     <script src="{{ url('Assets/js/popper.js') }}"></script>
     <script src="{{ url('Assets/js/bootstrap.min.js') }}"></script>

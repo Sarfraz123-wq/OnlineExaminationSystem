@@ -65,4 +65,11 @@ class AdminController extends Controller
             return response()->json(['success'=>false, 'msg'=>$e->getMessage()]);
         };
     }
+    public function editExam(Request $request){
+            $exam = Exam::find($request->id);
+            $exam->exam_name = $request->exam_name;
+            $exam->save();
+            $editedExam = Exam::find($exam->id);
+            return ["status" => true, "editedExam" => $editedExam];
+    }
 }
